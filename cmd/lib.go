@@ -132,14 +132,14 @@ func resolver(ctx context.Context, in chan ResultInfo, out chan []string, outerr
 				r.FullName,                            // Name
 				strconv.FormatInt(r.MissingSince, 10), // DateOfCase
 				fmt.Sprintf("%s,%s,%s", r.Country, r.State, r.City), // PlaceOfCase
-				picURL,                                // PicURL
-				picBase64,                             // PicBase64
-				additionalPicURL,                      // AdditionalPicURL
-				additionalPicBase64,                   // AdditionalPicBase64
-				strconv.FormatInt(chld.BirthDate, 10), // DateOfBirth
-				"-",                                   // PlaceOfBirth
-				chld.HairColor,                        // Hair
-				chld.EyeColor,                         // Eyes
+				picURL,              // PicURL
+				picBase64,           // PicBase64
+				additionalPicURL,    // AdditionalPicURL
+				additionalPicBase64, // AdditionalPicBase64
+				strconv.FormatInt(chld.BirthDate.int64, 10), // DateOfBirth
+				"-",            // PlaceOfBirth
+				chld.HairColor, // Hair
+				chld.EyeColor,  // Eyes
 				fmt.Sprintf("%s %s", chld.Height, chld.HeightUnit), // Height
 				fmt.Sprintf("%s %s", chld.Weight, chld.WeightUnit), // Weight
 				chld.Sex,                                // Sex
