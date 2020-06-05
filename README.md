@@ -28,3 +28,11 @@ csv whith fields
 - Details (Circumstances)
 - Field Office (Contact information)
 - Source
+
+
+# Running
+Download package.
+
+Go to cmd/ directory and run
+`go get`
+`go build`
