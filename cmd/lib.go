@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 func getData() (content string, err error) {
@@ -99,12 +98,12 @@ func resolver(ctx context.Context, in chan ResultInfo, out chan []string, outerr
 				outerr <- fmt.Errorf("error JSON unmarshal for case [%s] child [%s] info: %v", r.CaseId, r.ChildId, err)
 				break
 			}
-			additionalPicURL := ""
-			additionalPicBase64 := ""
-			for k, _ := range resultData.Case.Miscellaneous {
-				additionalPicURL = k
-				break
-			}
+			//additionalPicURL := ""
+			//additionalPicBase64 := ""
+			//for k, _ := range resultData.Case.Miscellaneous {
+			//	additionalPicURL = k
+			//	break
+			//}
 
 			// Case is closed
 			if resultData.Case.Status == "closed" {
@@ -118,39 +117,40 @@ func resolver(ctx context.Context, in chan ResultInfo, out chan []string, outerr
 				break
 			}
 			chld := resultData.Case.Children[0]
-			picURL := chld.Images.Portrait
-			picBase64 := ""
-			if picURL != "" {
-				_, picBase64, _ = downloadImage(*CacheDir, picURL)
-			}
-			if additionalPicURL != "" {
-				_, additionalPicBase64, _ = downloadImage(*CacheDir, additionalPicURL)
-			}
+			//picURL := chld.Images.Portrait
+			//picBase64 := ""
+			//if picURL != "" {
+			//	_, picBase64, _ = downloadImage(*CacheDir, picURL)
+			//}
+			//if additionalPicURL != "" {
+			//	_, additionalPicBase64, _ = downloadImage(*CacheDir, additionalPicURL)
+			//}
 
 			output := []string{
 				r.ChildId,                             // ID
 				r.FullName,                            // Name
-				strconv.FormatInt(r.MissingSince, 10), // DateOfCase
-				fmt.Sprintf("%s,%s,%s", r.Country, r.State, r.City), // PlaceOfCase
-				picURL,              // PicURL
-				picBase64,           // PicBase64
-				additionalPicURL,    // AdditionalPicURL
-				additionalPicBase64, // AdditionalPicBase64
-				strconv.FormatInt(chld.BirthDate.int64, 10), // DateOfBirth
+				chld.Sex,                                // Sex
+				chld.BirthDate.String(),
+				//strconv.FormatInt(chld.BirthDate.int64, 10), // DateOfBirth
 				"-",            // PlaceOfBirth
+				"",                                      // Nationality
+				fmt.Sprintf("%s,%s,%s", r.Country, r.State, r.City), // PlaceOfCase
+				r.MissingSinceString(), // DateOfCase
+				fmt.Sprintf("%s %s", chld.Height, chld.HeightUnit), // Height
 				chld.HairColor, // Hair
 				chld.EyeColor,  // Eyes
-				fmt.Sprintf("%s %s", chld.Height, chld.HeightUnit), // Height
-				fmt.Sprintf("%s %s", chld.Weight, chld.WeightUnit), // Weight
-				chld.Sex,                                // Sex
-				"",                                      // Race
-				"",                                      // Nationality
-				"",                                      // Reward
-				"",                                      // Remarks
-				"",                                      // Details
-				"",                                      // Field Office
-				"",                                      // Related Case
 				fmt.Sprintf("%s%s", *URLCase, r.CaseId), // Source
+				//picURL,              // PicURL
+				//picBase64,           // PicBase64
+				//additionalPicURL,    // AdditionalPicURL
+				//additionalPicBase64, // AdditionalPicBase64
+				//fmt.Sprintf("%s %s", chld.Weight, chld.WeightUnit), // Weight
+				//"",                                      // Race
+				//"",                                      // Reward
+				//"",                                      // Remarks
+				//"",                                      // Details
+				//"",                                      // Field Office
+				//"",                                      // Related Case
 			}
 			out <- output
 		case <-ctx.Done():

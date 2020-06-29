@@ -32,7 +32,9 @@ func (t *VariTime) UnmarshalJSON(b []byte) error {
 }
 
 func (t *VariTime) String() string {
-	return strconv.FormatInt(t.int64, 10)
+	timeVar := time.Unix(t.int64, 0)
+	strDate := timeVar.Format(time.UnixDate)
+	return strDate
 }
 
 //
@@ -54,6 +56,12 @@ type ResultInfo struct {
 	CreateDate   int64    `json:"createDate"`
 	LastUpdate   int64    `json:"lastUpdate"`
 	ChildId      string   `json:"childId"`
+}
+
+func (t *ResultInfo) MissingSinceString() string {
+	timeVar := time.Unix(t.MissingSince, 0)
+	strDate := timeVar.Format(time.UnixDate)
+	return strDate
 }
 
 type CaseInfo struct {
